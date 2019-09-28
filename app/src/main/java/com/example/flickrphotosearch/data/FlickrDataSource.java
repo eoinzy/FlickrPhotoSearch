@@ -40,9 +40,10 @@ public class FlickrDataSource implements PhotoDataSource {
         return INSTANCE;
     }
 
+
     @Override
-    public void getPhotoListByTag(final String tag, final SearchResultCallback searchResultCallback) {
-        Call<SearchResultPage> call = RestClient.get().getSearchResults(BuildConfig.FLICKR_API_KEY, tag);
+    public void getPhotoListByTag(final String tag, int page, final SearchResultCallback searchResultCallback) {
+        Call<SearchResultPage> call = RestClient.get().getSearchResults(BuildConfig.FLICKR_API_KEY, tag, page);
         call.enqueue(new Callback<SearchResultPage>() {
             @Override
             public void onResponse(@NonNull Call<SearchResultPage> call, @NonNull Response<SearchResultPage> response) {

@@ -20,7 +20,7 @@ public class Photos {
     private String total;
     @SerializedName("photo")
     @Expose
-    private List<Photo> photo = null;
+    private List<PhotoList> photoList = null;
 
     public int getPage() {
         return page;
@@ -54,11 +54,11 @@ public class Photos {
         this.total = total;
     }
 
-    public List<Photo> getPhoto() {
-        return photo;
+    public List<PhotoList> getPhotoList() {
+        return photoList;
     }
 
-    public void setPhoto(List<Photo> photo) {
-        this.photo = photo;
+    public void setPhotoList(List<PhotoList> photoList) {
+        this.photoList = photoList;
     }
 }

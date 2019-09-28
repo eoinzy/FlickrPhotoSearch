@@ -36,8 +36,8 @@ public class PhotoRepository implements PhotoDataSource {
     }
 
     @Override
-    public void getPhotoListByTag(String tag, SearchResultCallback searchResultCallback) {
-        mFlickrDataSource.getPhotoListByTag(tag, searchResultCallback);
+    public void getPhotoListByTag(String tag, int page, SearchResultCallback searchResultCallback) {
+        mFlickrDataSource.getPhotoListByTag(tag, page, searchResultCallback);
     }
 
     @Override
