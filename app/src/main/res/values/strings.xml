@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Flickr Photo Search</string>
 
+    <string name="search">Search</string>
+    <string name="empty_view_text">Search for a photo using the search icon above</string>
+
     <string name="title_activity_fullscreen">FullscreenActivity</string>
 
-    <string name="search">Search</string>
 </resources>

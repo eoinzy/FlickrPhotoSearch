@@ -42,6 +42,7 @@ public class PhotoPresenter implements PhotoContract.Presenter {
             public void onSearchResultSuccess(final Photos photos) {
                 showProgress(false);
                 if (page == 1) {
+                    mPhotosView.showEmptyView(false);
                     mPhotosView.populateList(photos);
                 } else {
                     mPhotosView.appendList(photos);
@@ -108,6 +109,6 @@ public class PhotoPresenter implements PhotoContract.Presenter {
     @Override
     public void start() {
         //Do any initial setup
-        mPhotosView.showEmptyView();
+        mPhotosView.showEmptyView(true);
     }
 }

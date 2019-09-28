@@ -115,7 +115,7 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     @Override
     public void populateList(final Photos photos) {
         // Set the adapter
-        if(null == recyclerView) {
+        if (null == recyclerView) {
             recyclerView = rootView.findViewById(R.id.list);
         }
 
@@ -162,7 +162,7 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
         currentItems.getPhotoList().addAll(photos.getPhotoList());
         photoRecyclerViewAdapter.notifyItemRangeInserted(curSize, currentItems.getPhotoList().size() - 1);
 
-        if(null == recyclerView) {
+        if (null == recyclerView) {
             recyclerView = rootView.findViewById(R.id.list);
         }
 
@@ -176,9 +176,12 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     }
 
     @Override
-    public void showEmptyView() {
+    public void showEmptyView(final boolean show) {
         //TODO: Show empty view
         Log.d(TAG, "Show empty View in Fragment");
+        rootView.findViewById(R.id.txt_hidden_view).setVisibility(show ? View.VISIBLE : View.GONE);
+        rootView.findViewById(R.id.list).setVisibility(show ? View.GONE : View.VISIBLE);
+
     }
 
     @Override

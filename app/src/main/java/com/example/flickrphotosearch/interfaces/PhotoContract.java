@@ -11,7 +11,7 @@ public interface PhotoContract {
 
         void showProgress(final boolean show);
 
-        void showEmptyView();
+        void showEmptyView(final boolean show);
 
         void showFullScreenImage(final Size image, final String photoTitle);
 

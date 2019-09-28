@@ -22,6 +22,17 @@
             android:layout_gravity="center" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/txt_hidden_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:drawableBottom="@android:drawable/ic_menu_search"
+        android:text="@string/empty_view_text"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:name="com.example.flickrphotosearch.fragments.PhotoFragment"
@@ -29,8 +40,9 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone"
         app:layoutManager="GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:spanCount="@integer/grid_span"
         tools:context=".fragments.PhotoFragment"
         tools:listitem="@layout/fragment_photo_list_item" />
