@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flickrphotosearch.R;
 import com.example.flickrphotosearch.fragments.PhotoFragment;
-import com.example.flickrphotosearch.models.Photo;
+import com.example.flickrphotosearch.models.PhotoList;
 import com.example.flickrphotosearch.models.Photos;
 
 /**
@@ -36,19 +36,23 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mPhoto = mPhotos.getPhoto().get(position);
-        mListener.onPhotoBind(holder.mPhoto.getId(), holder.mPhoto.getTitle(), holder.mContentView);
+        holder.mPhotoList = mPhotos.getPhotoList().get(position);
+        mListener.onPhotoBind(holder.mPhotoList.getId(), holder.mPhotoList.getTitle(), holder.mContentView);
     }
 
     @Override
     public int getItemCount() {
-        return mPhotos.getPhoto().size();
+        return mPhotos.getPhotoList().size();
+    }
+
+    public Photos getAllItems() {
+        return mPhotos;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final View mView;
         final ImageView mContentView;
-        Photo mPhoto;
+        PhotoList mPhotoList;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -60,13 +64,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
         @NonNull
         @Override
         public String toString() {
-            return super.toString() + " '" + mPhoto.getTitle() + "'";
+            return super.toString() + " '" + mPhotoList.getTitle() + "'";
         }
 
         @Override
         public void onClick(View v) {
             if (null != mListener) {
-                mListener.onPhotoSelected(mPhoto);
+                mListener.onPhotoSelected(mPhotoList);
             }
         }
     }

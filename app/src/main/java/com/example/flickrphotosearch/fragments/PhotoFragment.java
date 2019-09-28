@@ -20,9 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flickrphotosearch.FullscreenActivity;
 import com.example.flickrphotosearch.R;
+import com.example.flickrphotosearch.adapters.InfiniteScrollingListener;
 import com.example.flickrphotosearch.adapters.PhotoRecyclerViewAdapter;
 import com.example.flickrphotosearch.interfaces.PhotoContract;
-import com.example.flickrphotosearch.models.Photo;
+import com.example.flickrphotosearch.models.PhotoList;
 import com.example.flickrphotosearch.models.Photos;
 import com.example.flickrphotosearch.models.Size;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,8 +41,13 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     private View rootView;
     private PhotoContract.Presenter mPresenter;
 
+    private RecyclerView recyclerView;
+    private PhotoRecyclerViewAdapter photoRecyclerViewAdapter;
+
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount;
+
+    private String searchQuery;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -86,10 +92,11 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        final SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchQuery = query;
                 mPresenter.searchPhotosByTag(query);
                 return false;
             }
@@ -97,6 +104,7 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText != null && newText.length() > 3) {
+                    searchQuery = newText;
                     mPresenter.searchPhotosByTag(newText);
                 }
                 return false;
@@ -107,24 +115,58 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     @Override
     public void populateList(final Photos photos) {
         // Set the adapter
-        RecyclerView recyclerView = rootView.findViewById(R.id.list);
-        recyclerView.setHasFixedSize(true);
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(), mColumnCount));
+        if(null == recyclerView) {
+            recyclerView = rootView.findViewById(R.id.list);
         }
-        recyclerView.setAdapter(new PhotoRecyclerViewAdapter(photos, new OnPhotoInteractionListener() {
+
+//        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager;
+        if (mColumnCount <= 1) {
+            linearLayoutManager = new LinearLayoutManager(rootView.getContext());
+        } else {
+            linearLayoutManager = new GridLayoutManager(rootView.getContext(), mColumnCount);
+        }
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        photoRecyclerViewAdapter = new PhotoRecyclerViewAdapter(photos, new OnPhotoInteractionListener() {
             @Override
             public void onPhotoBind(String id, String photoTitle, ImageView imageView) {
                 mPresenter.getImageForView(id, photoTitle, imageView);
             }
 
             @Override
-            public void onPhotoSelected(Photo photo) {
-                mPresenter.getPhotoSizeList(photo.getId(), photo.getTitle());
+            public void onPhotoSelected(PhotoList photoList) {
+                mPresenter.getPhotoSizeList(photoList.getId(), photoList.getTitle());
             }
-        }));
+        });
+
+        recyclerView.setAdapter(photoRecyclerViewAdapter);
+
+        recyclerView.addOnScrollListener(new InfiniteScrollingListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.d(TAG, "Loading more from page: " + page);
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                mPresenter.searchPhotosByTag(searchQuery, page);
+            }
+        });
+    }
+
+    @Override
+    public void appendList(Photos photos) {
+        Log.d(TAG, "Appending photos to list: " + photos.getPhotoList().size());
+        int curSize = photoRecyclerViewAdapter.getItemCount();
+        Photos currentItems = photoRecyclerViewAdapter.getAllItems();
+        currentItems.getPhotoList().addAll(photos.getPhotoList());
+        photoRecyclerViewAdapter.notifyItemRangeInserted(curSize, currentItems.getPhotoList().size() - 1);
+
+        if(null == recyclerView) {
+            recyclerView = rootView.findViewById(R.id.list);
+        }
+
+        recyclerView.scrollToPosition(curSize);
     }
 
     @Override
@@ -195,6 +237,6 @@ public class PhotoFragment extends Fragment implements PhotoContract.View {
     public interface OnPhotoInteractionListener {
         void onPhotoBind(String id, String photoTitle, ImageView mContentView);
 
-        void onPhotoSelected(Photo photo);
+        void onPhotoSelected(PhotoList photoList);
     }
 }

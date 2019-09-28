@@ -30,13 +30,22 @@ public class PhotoPresenter implements PhotoContract.Presenter {
     }
 
     @Override
-    public void searchPhotosByTag(final String tag) {
+    public void searchPhotosByTag(String tag) {
+        searchPhotosByTag(tag, 1);
+    }
+
+    @Override
+    public void searchPhotosByTag(final String tag, final int page) {
         showProgress(true);
-        mPhotoRepository.getPhotoListByTag(tag, new PhotoDataSource.SearchResultCallback() {
+        mPhotoRepository.getPhotoListByTag(tag, page, new PhotoDataSource.SearchResultCallback() {
             @Override
             public void onSearchResultSuccess(final Photos photos) {
                 showProgress(false);
-                mPhotosView.populateList(photos);
+                if (page == 1) {
+                    mPhotosView.populateList(photos);
+                } else {
+                    mPhotosView.appendList(photos);
+                }
             }
 
             @Override

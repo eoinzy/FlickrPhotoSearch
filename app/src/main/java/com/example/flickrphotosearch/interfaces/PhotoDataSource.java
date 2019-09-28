@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface PhotoDataSource {
 
-    void getPhotoListByTag(String tag, SearchResultCallback searchResultCallback);
+    void getPhotoListByTag(String tag, int page, SearchResultCallback searchResultCallback);
 
     void getPhotoSizes(String photoId, GetSizesCallback getSizesCallback);
 

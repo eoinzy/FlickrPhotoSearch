@@ -3,7 +3,7 @@ package com.example.flickrphotosearch.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+public class PhotoList {
 
     @SerializedName("id")
     @Expose

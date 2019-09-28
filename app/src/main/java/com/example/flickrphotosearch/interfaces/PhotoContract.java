@@ -18,11 +18,15 @@ public interface PhotoContract {
         void showError(final String message);
 
         void populateList(final Photos photos);
+
+        void appendList(final Photos photos);
     }
 
     interface Presenter extends BasePresenter {
 
         void searchPhotosByTag(final String tag);
+
+        void searchPhotosByTag(final String tag, final int page);
 
         void getPhotoSizeList(final String photoId, final String photoTitle);
 
